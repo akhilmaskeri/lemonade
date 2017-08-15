@@ -1,0 +1,2 @@
+-   sudoku solver using candidates
+-   tic tac toe   using minmax 
