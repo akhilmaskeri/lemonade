@@ -5,19 +5,17 @@
 using namespace std;
 
 class board{
-
     private:
         int b[3][3];
-
     public:
         board(){
-            
             for(int i=0;i<3;i++)
                 for(int j=0;j<3;j++)
                     b[i][j]=0;
         }
 
         //--------------------------------------
+
         int get(int i,int j){
             return b[i][j];
         }
@@ -48,7 +46,6 @@ class board{
             if(b[0][2]==b[1][1] && b[0][2]==b[2][0] && b[0][2]!=0)              // non-principle diagonal
                 return b[0][2];
 
-
             int i,j;
                                                                                 // row wise
             for(i=0;i<3;i++){
@@ -65,12 +62,10 @@ class board{
                     if(b[j][i]!=b[j+1][i] || b[j][i]==0)
                         break;
                 if(j==2){
-                    return b[i][j];
+                    return b[j][i];
                 }
-            
             }
            
-            // nobody won
             return 0;
         }
         //--------------------------------------------
@@ -112,41 +107,104 @@ class board{
 
 };
 
-class minmax{
+class computer{
+
+    private:
+        int player;
 
     public:
-        int flipflop(board b,int *r,int *c,int depth){
+        computer(int p){
+            player = p;
+        }
 
-            if(b.finished())
-                return b.finished();
+        int number(){
+            return player;
+        }
 
-            depth++;
+        int minmax(board b,int *r,int *c,int depth){
 
-            board possible[9];
+            if(depth>1)return 0;
+
+            if(b.finished()){
+                return b.getScore();
+            }
+
+            depth+=1;
+
+            int scores[9];
+            int moves[9][2];
             int count=0;
-            int move[9][2];
+
+            computer max((player*-1)+1);
+
+            board test;
 
             for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
-                
+                    
                     if(b.isEmpty(i,j)){
-                        possible[count].setBoard(b);
-                        possible[count].play(i,j,1);
-                    } 
-                
+                        
+                        test.setBoard(b);
+                        test.play(i,j,player);
+                        scores[count]=max.minmax(test,r,c,depth);
+                        moves[count][0]=i;
+                        moves[count][1]=j;
+
+                        count++;
+
+                    }
                 }
             }
-        
+
+            int maxscore = 0;
+            int minscore = 0;
+
+            int guilty=1;
+
+            for(int i=0;i<count;i++){
+
+                if(i<count-1 && scores[i]!=scores[i+1] )
+                    guilty=0;
+
+                if(scores[i]>scores[maxscore])
+                    maxscore=i;
+                if(scores[i]<scores[minscore])
+                    minscore=i;
+            }
+
+            if(guilty){
+                
+                int z = rand()%count;
+                *r = moves[z][0];
+                *c = moves[z][1];
+                return 0;
+                
+            }
+
+            if(player==1){
+                *r = moves[maxscore][0];
+                *c = moves[maxscore][1];
+                return scores[maxscore];
+            }
+
+            *r = moves[minscore][0];
+            *c = moves[minscore][1];
+
+            return scores[minscore];
+
         }
 
 };
+
 
 int main(){
 
     int player;
     int r,c,i;
+    int depth=0;
 
     board b;
+    computer cheryl(1);                             // cheryl always plays o
 
     srand((unsigned)time(0));
 
@@ -158,14 +216,11 @@ int main(){
     
         if((player+i)%2){                       // computer playes
 
-            do{
-                r = rand()%3;
-                c = rand()%3;
-            }while(!b.isEmpty(r,c));
-
             // do the minmax instead of random
+            cheryl.minmax(b,&r,&c,0);
 
             b.play(r,c,1);
+            cout<<"cheryl> "<<r<<" "<<c<<endl;
 
         }
         else{                                 // user playes
@@ -182,9 +237,42 @@ int main(){
     }
 
     b.display();
-    if(i!=9)
-        cout<<((b.finished()*-1)+1)/2<<" wins"<<endl;
+    if(i!=9){
+        if(((b.finished()*-1)+1)/2)
+            cout<<"you win"<<endl;
+        else
+            cout<<"cheryl wins"<<endl;
+    }
     else
         cout<<"match draw"<<endl;
 
+    return 0;
 }
+
+int test(){
+
+    int player;
+    int r,c,i;
+    int depth=0;
+
+    board b;
+    b.play(1,0,0); 
+    b.play(1,1,0);
+
+
+    computer cheryl(1);                             // cheryl always plays o
+
+//    /*
+    cheryl.minmax(b,&r,&c,0);
+    b.play(r,c,1);
+    b.display();
+    cout<<b.getScore()<<endl;
+
+    cout<<r<<" "<<c<<endl;
+
+//    */
+
+    return 0;
+}
+
+
