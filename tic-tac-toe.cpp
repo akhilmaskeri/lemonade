@@ -123,7 +123,7 @@ class computer{
 
         int minmax(board b,int *r,int *c,int depth){
 
-            if(depth>1)return 0;
+            if(depth>2)return 0;
 
             if(b.finished()){
                 return b.getScore();
@@ -146,7 +146,12 @@ class computer{
                         
                         test.setBoard(b);
                         test.play(i,j,player);
+
+                     //   test.display();
+                     //   cout<<"score "<<test.getScore()<<endl;
+
                         scores[count]=max.minmax(test,r,c,depth);
+
                         moves[count][0]=i;
                         moves[count][1]=j;
 
@@ -163,7 +168,9 @@ class computer{
 
             for(int i=0;i<count;i++){
 
-                if(i<count-1 && scores[i]!=scores[i+1] )
+                cout<<scores[i]<<" ";
+
+                if(i<=count-1 && scores[i]!=scores[i+1] && scores[i]==0)
                     guilty=0;
 
                 if(scores[i]>scores[maxscore])
@@ -171,9 +178,12 @@ class computer{
                 if(scores[i]<scores[minscore])
                     minscore=i;
             }
+            cout<<endl;
 
             if(guilty){
-                
+
+                cout<<"not guilty"<<endl;
+
                 int z = rand()%count;
                 *r = moves[z][0];
                 *c = moves[z][1];
@@ -182,6 +192,7 @@ class computer{
             }
 
             if(player==1){
+
                 *r = moves[maxscore][0];
                 *c = moves[maxscore][1];
                 return scores[maxscore];
