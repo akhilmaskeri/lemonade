@@ -164,27 +164,24 @@ class computer{
             int maxscore = 0;
             int minscore = 0;
 
-            int guilty=1;
+            int zeros=1;
 
             for(int i=0;i<count;i++){
 
-                cout<<scores[i]<<" ";
-
                 if(i<=count-1 && scores[i]!=scores[i+1] && scores[i]==0)
-                    guilty=0;
+                    zeros=0;
 
                 if(scores[i]>scores[maxscore])
                     maxscore=i;
                 if(scores[i]<scores[minscore])
                     minscore=i;
             }
-            cout<<endl;
 
-            if(guilty){
+            if(zeros){
 
-                cout<<"not guilty"<<endl;
-
-                int z = rand()%count;
+                int z = 0;
+                if(count)
+                    z=rand()%count;
                 *r = moves[z][0];
                 *c = moves[z][1];
                 return 0;
