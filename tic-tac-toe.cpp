@@ -4,40 +4,42 @@
 
 using namespace std;
 
+// class for keeping track of valid
+// moves and other utility functions
 class board{
+
     private:
         int b[3][3];
+
     public:
+        // initialize with null on all cells
         board(){
             for(int i=0;i<3;i++)
                 for(int j=0;j<3;j++)
                     b[i][j]=0;
         }
 
-        //--------------------------------------
+        // utility functions
 
+        // getter
         int get(int i,int j){
             return b[i][j];
         }
-
-        int getScore(){
-            int score = finished()*10;
-            return score;
-        }
-
         int isEmpty(int r,int c){
             if(b[r][c]==0)
                 return 1;
             return 0;
         }
 
-        void setBoard(board br){                // copy the board
+        // copy from other instant  
+        void setBoard(board br){               
             for(int i=0;i<3;i++)
                 for(int j=0;j<3;j++)
                     b[i][j]=br.get(i,j);
 
         }
 
+        // status check
         int finished(){
 
             if(b[0][0]==b[1][1] && b[0][0]==b[2][2] && b[0][0]!=0)              // principle diagonal
@@ -57,7 +59,7 @@ class board{
                 }
             }
 
-            for(i=0;i<3;i++){
+            for(i=0;i<3;i++){                                                   // column wise
                 for(j=0;j<2;j++)
                     if(b[j][i]!=b[j+1][i] || b[j][i]==0)
                         break;
@@ -68,8 +70,8 @@ class board{
            
             return 0;
         }
-        //--------------------------------------------
 
+        // move
         void play(int r,int c,int p){
 
             if(p){                              // user is playing 
@@ -81,7 +83,7 @@ class board{
             
         }
 
-        //--------------------------------------------
+        // utility display
         void display(){
 
             for(int i=0;i<20;i++)
@@ -105,8 +107,17 @@ class board{
             cout<<endl;
         }
 
+        // score for minmax
+        int getScore(){
+            int score = finished()*10;
+            return score;
+        }
+
+
+
 };
 
+// class to abstract bot
 class computer{
 
     private:
@@ -123,6 +134,7 @@ class computer{
 
         int minmax(board b,int *r,int *c,int depth){
 
+            // only for depth <= 2
             if(depth>2)return 0;
 
             if(b.finished()){
@@ -135,8 +147,10 @@ class computer{
             int moves[9][2];
             int count=0;
 
+            // toggle player < -1 or 1 >
             computer max((player*-1)+1);
 
+            // board instant for testing
             board test;
 
             for(int i=0;i<3;i++){
@@ -144,12 +158,13 @@ class computer{
                     
                     if(b.isEmpty(i,j)){
                         
-                        test.setBoard(b);
+                        // copy current board
+                        test.setBoard(b);  
+
+                        // play at i j with emulating a player
                         test.play(i,j,player);
 
-                     //   test.display();
-                     //   cout<<"score "<<test.getScore()<<endl;
-
+                        // save scores
                         scores[count]=max.minmax(test,r,c,depth);
 
                         moves[count][0]=i;
@@ -166,6 +181,7 @@ class computer{
 
             int zeros=1;
 
+            // get max / min / ties from the simulated board
             for(int i=0;i<count;i++){
 
                 if(i<=count-1 && scores[i]!=scores[i+1] && scores[i]==0)
@@ -177,6 +193,9 @@ class computer{
                     minscore=i;
             }
 
+            // in case of more than one move
+            // end up with same score randomly
+            // select the move
             if(zeros){
 
                 int z = 0;
@@ -188,6 +207,7 @@ class computer{
                 
             }
 
+            // select the best move
             if(player==1){
 
                 *r = moves[maxscore][0];
@@ -211,32 +231,33 @@ int main(){
     int r,c,i;
     int depth=0;
 
+    //initialize the board
     board b;
-    computer cheryl(1);                             // cheryl always plays o
+    computer cheryl(1);                             // bot always plays o
 
     srand((unsigned)time(0));
 
-    player = rand()%2;                          // randomly choose the first player
+    player = rand()%2;                              // randomly choose the first player
     cout<<"first player : "<<player<<endl;
 
 
     for(i=0;i<9 && !b.finished() ;i++){
     
-        if((player+i)%2){                       // computer playes
+        if((player+i)%2){                           // computer 
 
-            // do the minmax instead of random
             cheryl.minmax(b,&r,&c,0);
 
             b.play(r,c,1);
-            cout<<"cheryl> "<<r<<" "<<c<<endl;
+            cout<<"bot > "<<r<<" "<<c<<endl;
 
         }
-        else{                                 // user playes
+        else{                                       // user
             b.display();
 
             do{
                 cout<<"r:c > ";
                 cin>>r>>c;
+
             }while(r>=3 && c>=3 &&  !b.isEmpty(r,c));
             
             b.play(r,c,0);
@@ -245,18 +266,21 @@ int main(){
     }
 
     b.display();
+
+    // if game ends before all moves
     if(i!=9){
+
         if(((b.finished()*-1)+1)/2)
             cout<<"you win"<<endl;
         else
-            cout<<"cheryl wins"<<endl;
+            cout<<"bot wins"<<endl;
     }
     else
         cout<<"match draw"<<endl;
 
     return 0;
 }
-
+/*
 int test(){
 
     int player;
@@ -270,7 +294,6 @@ int test(){
 
     computer cheryl(1);                             // cheryl always plays o
 
-//    /*
     cheryl.minmax(b,&r,&c,0);
     b.play(r,c,1);
     b.display();
@@ -278,9 +301,6 @@ int test(){
 
     cout<<r<<" "<<c<<endl;
 
-//    */
-
     return 0;
 }
-
-
+*/

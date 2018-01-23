@@ -40,6 +40,10 @@ void seed(){
     }
 }
 
+// utility function prints each cell
+// []        - printed for unopened cells
+// <space>   - printed for opened empty cells
+// <num>     - number is displayed if cell contains number
 int display(){
 
     int count=0;
@@ -71,10 +75,9 @@ int display(){
 void zero(int r,int c){
 
     // if r and c are invalid  -> return
-    if(r==-1)return;
-    if(c==-1)return;
-    if(c>size)return;
-    if(r>size)return;
+    if(r==-1)return; if(c==-1)return;
+    if(c>size)return;if(r>size)return;
+
 
     if(a[r][c]==1)return;             //has already been open return
 
@@ -82,16 +85,18 @@ void zero(int r,int c){
 
     if(m[r][c]!=0) return;            //if not empty return
 
+
     // if empty recursively open surrounding cells
     
     zero(r-1,c-1);     zero(r-1,c);      zero(r-1,c+1);
 
-    zero(r,c-1);                         zero(r,c+1);
+    zero(r,c-1);       /* m[r][c] */     zero(r,c+1);
 
     zero(r+1,c-1);     zero(r+1,c);      zero(r+1,c+1);
  
 }
 
+// returns status based on opened cell
 int open(int r,int c){
 
 
