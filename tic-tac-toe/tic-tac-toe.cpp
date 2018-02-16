@@ -42,14 +42,17 @@ class board{
         // status check
         int finished(){
 
-            if(b[0][0]==b[1][1] && b[0][0]==b[2][2] && b[0][0]!=0)              // principle diagonal
+            // principle diagonal
+            if(b[0][0]==b[1][1] && b[0][0]==b[2][2] && b[0][0]!=0)              
                 return b[0][0];
 
-            if(b[0][2]==b[1][1] && b[0][2]==b[2][0] && b[0][2]!=0)              // non-principle diagonal
+            // non-principle diagonal
+            if(b[0][2]==b[1][1] && b[0][2]==b[2][0] && b[0][2]!=0)              
                 return b[0][2];
 
             int i,j;
-                                                                                // row wise
+                                                                                
+            // row wise
             for(i=0;i<3;i++){
                 for(j=0;j<2;j++)
                     if(b[i][j]!=b[i][j+1] || b[i][j]==0)
@@ -59,7 +62,8 @@ class board{
                 }
             }
 
-            for(i=0;i<3;i++){                                                   // column wise
+            // column wise
+            for(i=0;i<3;i++){                                                   
                 for(j=0;j<2;j++)
                     if(b[j][i]!=b[j+1][i] || b[j][i]==0)
                         break;
@@ -109,8 +113,7 @@ class board{
 
         // score for minmax
         int getScore(){
-            int score = finished()*10;
-            return score;
+            return finished()*10;
         }
 
 
@@ -236,8 +239,9 @@ int main(){
     computer cheryl(1);                             // bot always plays o
 
     srand((unsigned)time(0));
-
-    player = rand()%2;                              // randomly choose the first player
+    
+    // randomly choose the first player
+    player = rand()%2;                              
     cout<<"first player : "<<player<<endl;
 
 
