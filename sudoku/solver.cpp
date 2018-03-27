@@ -2,24 +2,12 @@
 
 using namespace std;
 
-// @idea https://www.geeksforgeeks.org/program-sudoku-generator/
-
-// utility function
-void swap(int *a,int *b){
-    int t = *a;
-    *a = *b;
-    *b = t;
-}
-
 // utility function
 void display(int board[9][9]){
 
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++)
-            if(board[i][j]==0)
-                cout<<"-"<<" ";
-            else
-                cout<<board[i][j]<<" ";
+            cout<<board[i][j]<<" ";
         cout<<endl;
     }
 }
@@ -99,83 +87,23 @@ int solve(int board[9][9]){
     return 0;
 }
 
-// shuffle the given array
-void shuffle(int a[],int n){
-
-    int ptr = n; 
-
-    while(ptr>0){
-
-        // randomly generate position
-        int x = rand()%ptr;     
-        // swap it with the last element
-        ptr--;
-        swap(a[x],a[ptr]);
-
-    }
-
-}
-
-// generate a complete sudoku grid
-void generate(int board[9][9]){
-    
-    // candidates
-    int c[]={1,2,3,4,5,6,7,8,9};
-    int box_r,box_c;
-    int n=9,k;
-
-    // for box starting at 0 , 0
-    shuffle(c,n);
-    k=0;
-
-    box_r=box_c=0;
-
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            board[box_r+i][box_c+j] = c[k++];
-        }
-    }
-
-    // for box starting at 3 , 3    
-    shuffle(c,n);
-    k=0;
-
-    box_r=box_c=3;
-
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            board[box_r+i][box_c+j] = c[k++];
-        }
-    }
-
-    // for box starting at 6 , 6
-    shuffle(c,n);
-    k=0;
-
-    box_r=box_c=6;
-
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            board[box_r+i][box_c+j] = c[k++];
-        }
-    }
-
-    // solve for remaining positions
-    if(solve(board)){
-        display(board);
-    }
-
-}
 
 int main(){
 
-    // seed numbers
-    srand((unsigned)time(0));
+    int board[9][9];
+    int r=0,c=0;
 
-    int board[9][9]={0};
+    // get the input for file
+    for(int i=0;i<9;i++)
+        for(int j=0;j<9;j++)
+            cin>>board[i][j];
 
-    generate(board);
+    if(solve(board)){
+        display(board);
+    }
+    else{
+        cout<<"cannot be solved!!"<<endl;
+    }
 
     return 0;
 }
-
