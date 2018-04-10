@@ -153,7 +153,7 @@ int main(){
     while(!gameOver(board)){
 
         display(board);
-
+        cout<<"0:up  |  1:down  |  2:left  |  3:right"<<endl;
         cout<<"move: ";
         cin>>move;
 
