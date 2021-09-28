@@ -1,0 +1,9 @@
+{
+    "stack_size": 4,
+    "stacks": [
+        ["O","O"],
+        ["B","B", "B"],
+        ["O", "O", "B"]
+    ],
+    "helpers": 0
+}
