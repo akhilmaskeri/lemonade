@@ -1,4 +1,8 @@
-game: 
-	g++ -o game game.cpp -lncurses
+build:
+	g++ tetris.cpp -I board.h -o tetris
+
+run:
+	./tetris
+
 clean:
-	rm -f a.out game
+	rm -rf tetris
